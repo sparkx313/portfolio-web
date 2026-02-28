@@ -15,57 +15,36 @@ interface Project {
   demoUrl?: string;
 }
 
-const projects: Project[] = [
-  {
-    id: 1,
-    title: 'Predictive Analytics Dashboard',
-    description: 'Interactive dashboard for forecasting sales trends using machine learning algorithms.',
-    tags: ['Python', 'TensorFlow', 'React', 'D3.js'],
-    colSpan: 2,
-    rowSpan: 1,
-    githubUrl: '#',
-    demoUrl: '#'
-  },
-  {
-    id: 2,
-    title: 'Data Pipeline Automation',
-    description: 'Automated ETL pipeline for processing large-scale datasets with real-time monitoring.',
-    tags: ['Python', 'Airflow', 'SQL', 'AWS'],
-    colSpan: 1,
-    rowSpan: 2,
-    githubUrl: '#',
-    demoUrl: '#'
-  },
-  {
-    id: 3,
-    title: 'Customer Segmentation Model',
-    description: 'Unsupervised learning model for segmenting customers based on behavioral patterns.',
-    tags: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
-    colSpan: 1,
-    rowSpan: 1,
-    githubUrl: '#',
-    demoUrl: '#'
-  },
-  {
-    id: 4,
-    title: 'NLP Sentiment Analysis',
-    description: 'Natural language processing model for analyzing sentiment in social media data.',
-    tags: ['Python', 'NLTK', 'Transformers', 'PyTorch'],
-    colSpan: 1,
-    rowSpan: 1,
-    githubUrl: '#',
-    demoUrl: '#'
-  },
-  {
-    id: 5,
-    title: 'Real-time Data Visualization',
-    description: 'Streaming data visualization platform for monitoring live metrics and KPIs.',
-    tags: ['Python', 'Plotly', 'WebSocket', 'FastAPI'],
-    colSpan: 2,
-    rowSpan: 1,
-    githubUrl: '#',
-    demoUrl: '#'
-  }
+{
+  id: 1,
+    title: 'Data Cleaning Script',
+      description: 'A Python script using Pandas to automatically ingest, clean, format, and handle missing values in messy CSV datasets.',
+        tags: ['Python', 'Pandas', 'Data Wrangling'],
+          colSpan: 2,
+            rowSpan: 1,
+              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/data_cleaning',
+                demoUrl: ''
+},
+{
+  id: 2,
+    title: 'Personal Finance Visualizer',
+      description: 'A Python program that categorizes monthly bank transactions and dynamically generates a colorful Pie Chart visualization of spending habits.',
+        tags: ['Python', 'Matplotlib', 'Data Visualization'],
+          colSpan: 1,
+            rowSpan: 2,
+              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/expense_tracker',
+                demoUrl: ''
+},
+{
+  id: 3,
+    title: 'Live Weather Dashboard',
+      description: 'A terminal-based dashboard that connects to a live API to fetch and beautifully display current weather conditions around the globe.',
+        tags: ['Python', 'APIs', 'JSON'],
+          colSpan: 2,
+            rowSpan: 1,
+              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/weather_dashboard',
+                demoUrl: ''
+}
 ];
 
 const ProjectsSection: React.FC = () => {
