@@ -2,6 +2,8 @@
 
 A sleek, highly interactive, and modern portfolio website tailored for Data Science professionals. Built with performance and advanced UI/UX aesthetics in mind, this project demonstrates data analytics, machine learning, and predictive modeling expertise through a premium digital experience.
 
+![Portfolio Preview](./public/preview-image.png)
+
 ## ✨ Key Features & Aesthetics
 
 This portfolio doesn't just list projects; it provides an immersive user experience utilizing cutting-edge frontend technologies:
