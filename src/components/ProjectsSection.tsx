@@ -15,36 +15,37 @@ interface Project {
   demoUrl?: string;
 }
 
-{
-  id: 1,
+const projects: Project[] = [
+  {
+    id: 1,
     title: 'Data Cleaning Script',
-      description: 'A Python script using Pandas to automatically ingest, clean, format, and handle missing values in messy CSV datasets.',
-        tags: ['Python', 'Pandas', 'Data Wrangling'],
-          colSpan: 2,
-            rowSpan: 1,
-              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/data_cleaning',
-                demoUrl: ''
-},
-{
-  id: 2,
+    description: 'A Python script using Pandas to automatically ingest, clean, format, and handle missing values in messy CSV datasets.',
+    tags: ['Python', 'Pandas', 'Data Wrangling'],
+    colSpan: 2,
+    rowSpan: 1,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/data_cleaning',
+    demoUrl: ''
+  },
+  {
+    id: 2,
     title: 'Personal Finance Visualizer',
-      description: 'A Python program that categorizes monthly bank transactions and dynamically generates a colorful Pie Chart visualization of spending habits.',
-        tags: ['Python', 'Matplotlib', 'Data Visualization'],
-          colSpan: 1,
-            rowSpan: 2,
-              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/expense_tracker',
-                demoUrl: ''
-},
-{
-  id: 3,
+    description: 'A Python program that categorizes monthly bank transactions and dynamically generates a colorful Pie Chart visualization of spending habits.',
+    tags: ['Python', 'Matplotlib', 'Data Visualization'],
+    colSpan: 1,
+    rowSpan: 2,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/expense_tracker',
+    demoUrl: ''
+  },
+  {
+    id: 3,
     title: 'Live Weather Dashboard',
-      description: 'A terminal-based dashboard that connects to a live API to fetch and beautifully display current weather conditions around the globe.',
-        tags: ['Python', 'APIs', 'JSON'],
-          colSpan: 2,
-            rowSpan: 1,
-              githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/weather_dashboard',
-                demoUrl: ''
-}
+    description: 'A terminal-based dashboard that connects to a live API to fetch and beautifully display current weather conditions around the globe.',
+    tags: ['Python', 'APIs', 'JSON'],
+    colSpan: 2,
+    rowSpan: 1,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/weather_dashboard',
+    demoUrl: ''
+  }
 ];
 
 const ProjectsSection: React.FC = () => {
