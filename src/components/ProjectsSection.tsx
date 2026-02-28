@@ -20,7 +20,7 @@ const projects: Project[] = [
     id: 1,
     title: 'Data Cleaning Script',
     description: 'A Python script using Pandas to automatically ingest, clean, format, and handle missing values in messy CSV datasets.',
-    tags: ['Python', 'Pandas', 'Data Wrangling'],
+    tags: ['Python', 'Pandas', 'Wrangling'],
     colSpan: 2,
     rowSpan: 1,
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/data_cleaning',
@@ -28,9 +28,9 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: 'Personal Finance Visualizer',
-    description: 'A Python program that categorizes monthly bank transactions and dynamically generates a colorful Pie Chart visualization of spending habits.',
-    tags: ['Python', 'Matplotlib', 'Data Visualization'],
+    title: 'Finance Visualizer',
+    description: 'Categorizes bank transactions and dynamically generates a Pie Chart visualization of spending habits.',
+    tags: ['Python', 'Matplotlib', 'Data Viz'],
     colSpan: 1,
     rowSpan: 2,
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/expense_tracker',
@@ -38,12 +38,42 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: 'Live Weather Dashboard',
-    description: 'A terminal-based dashboard that connects to a live API to fetch and beautifully display current weather conditions around the globe.',
+    title: 'Weather Dashboard',
+    description: 'A terminal dashboard connecting to a live API to beautifully display current weather conditions.',
     tags: ['Python', 'APIs', 'JSON'],
-    colSpan: 2,
+    colSpan: 1,
     rowSpan: 1,
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/weather_dashboard',
+    demoUrl: ''
+  },
+  {
+    id: 4,
+    title: 'Web Scraper',
+    description: 'Demonstrates web scraping fundamentals by extracting top movie data from HTML into a CSV file.',
+    tags: ['Python', 'BeautifulSoup', 'CSV'],
+    colSpan: 1,
+    rowSpan: 1,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/web_scraper',
+    demoUrl: ''
+  },
+  {
+    id: 5,
+    title: 'Guessing Game',
+    description: 'A classic beginner Python game demonstrating standard while loops, conditionals, and user input.',
+    tags: ['Python', 'Logic', 'Terminal'],
+    colSpan: 1,
+    rowSpan: 1,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/guessing_game',
+    demoUrl: ''
+  },
+  {
+    id: 6,
+    title: 'CLI Task Manager',
+    description: 'A fundamental project showing Create, Read, Update, Delete (CRUD) operations on task lists.',
+    tags: ['Python', 'Dictionaries', 'CRUD'],
+    colSpan: 1,
+    rowSpan: 1,
+    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/task_manager',
     demoUrl: ''
   }
 ];
