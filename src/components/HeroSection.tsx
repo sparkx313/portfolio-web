@@ -53,21 +53,21 @@ const HeroSection: React.FC = () => {
         </motion.h1>
 
         <motion.div
-          className={`text-2xl sm:text-3xl md:text-4xl text-foreground mb-8 min-h-[80px] flex items-center justify-center space-x-2`}
+          className="text-xl sm:text-2xl md:text-4xl text-foreground mb-8 min-h-[100px] sm:min-h-[80px] flex flex-col sm:flex-row items-center justify-center sm:space-x-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          <span>Passionate about</span>
-          <div className="relative inline-flex overflow-visible h-14 w-[360px] justify-start items-center ml-2">
+          <span className="mb-2 sm:mb-0">Passionate about</span>
+          <div className="relative inline-flex overflow-visible h-10 sm:h-14 w-full sm:w-[360px] justify-center sm:justify-start items-center">
             <AnimatePresence mode="wait">
               <motion.span
                 key={index}
-                initial={{ y: 40, opacity: 0, filter: "blur(4px)" }}
+                initial={{ y: 20, opacity: 0, filter: "blur(4px)" }}
                 animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                exit={{ y: -40, opacity: 0, filter: "blur(4px)" }}
+                exit={{ y: -20, opacity: 0, filter: "blur(4px)" }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className={`absolute font-semibold text-transparent bg-clip-text bg-gradient-to-r ${currentGradient} whitespace-nowrap left-0`}
+                className={`absolute font-semibold text-transparent bg-clip-text bg-gradient-to-r ${currentGradient} whitespace-nowrap`}
               >
                 {roles[index]}
               </motion.span>
