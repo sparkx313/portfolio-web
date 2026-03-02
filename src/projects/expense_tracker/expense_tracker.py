@@ -34,9 +34,9 @@ def generate_expense_report():
     plt.title('Monthly Expense Breakdown', fontsize=16, fontweight='bold')
     plt.axis('equal') # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    # Instead of showing it, let's pretend to save it
+    # Save the chart to a file
     # plt.show()
-    # plt.savefig('expense_report_chart.png')
+    plt.savefig('expense_report_chart.png')
     
     print("\n✅ Successfully categorized expenses.")
     print("✅ Generated Pie Chart visualization.")
