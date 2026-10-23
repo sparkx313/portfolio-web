@@ -1,81 +1,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard, GlassCardHeader, GlassCardTitle, GlassCardDescription, GlassCardContent, GlassCardFooter } from './ui/GlassCard';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 import TiltCard from './ui/TiltCard';
 
 interface Project {
-  id: number;
   title: string;
   description: string;
   tags: string[];
-  colSpan?: number;
-  rowSpan?: number;
-  githubUrl?: string;
-  demoUrl?: string;
+  githubUrl: string;
 }
 
 const projects: Project[] = [
   {
-    id: 1,
-    title: 'Data Cleaning Script',
-    description: 'A Python script using Pandas to automatically ingest, clean, format, and handle missing values in messy CSV datasets.',
-    tags: ['Python', 'Pandas', 'Wrangling'],
-    colSpan: 2,
-    rowSpan: 1,
+    title: 'CSV Cleaner',
+    description: 'Trims CSV headers and text cells, optionally removes duplicate or fully empty rows, and preserves missing values for review.',
+    tags: ['Python', 'Pandas', 'CSV'],
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/data_cleaning',
-    demoUrl: ''
   },
   {
-    id: 2,
-    title: 'Finance Visualizer',
-    description: 'Categorizes bank transactions and dynamically generates a Pie Chart visualization of spending habits.',
-    tags: ['Python', 'Matplotlib', 'Data Viz'],
-    colSpan: 1,
-    rowSpan: 2,
+    title: 'Transaction Category Report',
+    description: 'Summarizes a transaction CSV by category and writes a net-amount report with a bar chart. Reads the transactions you provide.',
+    tags: ['Python', 'Pandas', 'Matplotlib'],
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/expense_tracker',
-    demoUrl: ''
   },
   {
-    id: 3,
-    title: 'Weather Dashboard',
-    description: 'A terminal dashboard connecting to a live API to beautifully display current weather conditions.',
-    tags: ['Python', 'APIs', 'JSON'],
-    colSpan: 1,
-    rowSpan: 1,
+    title: 'Weather Observations Dashboard',
+    description: 'Plots temperature and precipitation readings from a weather CSV and reports the observed date range and summary statistics.',
+    tags: ['Python', 'Pandas', 'Data Visualization'],
     githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/weather_dashboard',
-    demoUrl: ''
   },
-  {
-    id: 4,
-    title: 'Web Scraper',
-    description: 'Demonstrates web scraping fundamentals by extracting top movie data from HTML into a CSV file.',
-    tags: ['Python', 'BeautifulSoup', 'CSV'],
-    colSpan: 1,
-    rowSpan: 1,
-    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/web_scraper',
-    demoUrl: ''
-  },
-  {
-    id: 5,
-    title: 'Guessing Game',
-    description: 'A classic beginner Python game demonstrating standard while loops, conditionals, and user input.',
-    tags: ['Python', 'Logic', 'Terminal'],
-    colSpan: 1,
-    rowSpan: 1,
-    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/guessing_game',
-    demoUrl: ''
-  },
-  {
-    id: 6,
-    title: 'CLI Task Manager',
-    description: 'A fundamental project showing Create, Read, Update, Delete (CRUD) operations on task lists.',
-    tags: ['Python', 'Dictionaries', 'CRUD'],
-    colSpan: 1,
-    rowSpan: 1,
-    githubUrl: 'https://github.com/sparkx313/portfolio-web/tree/main/src/projects/task_manager',
-    demoUrl: ''
-  }
 ];
 
 const ProjectsSection: React.FC = () => {
@@ -90,22 +44,22 @@ const ProjectsSection: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Projects</span>
+            Working <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Projects</span>
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            A collection of data science and analytics projects showcasing my expertise in machine learning, data visualization, and predictive modeling.
+            These small tools run on files you provide. Their source and input requirements are documented in each project folder.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-min">
-          {projects.map((project) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, index) => (
             <motion.div
-              key={project.id}
-              className={`group relative ${project.colSpan ? `col-span-${project.colSpan}` : 'col-span-1'} ${project.rowSpan ? `row-span-${project.rowSpan}` : 'row-span-1'}`}
+              key={project.title}
+              className="group relative"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: project.id * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <TiltCard className="h-full">
                 <GlassCard className="h-full flex flex-col transition-all duration-300 border border-white/5 hover:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
@@ -118,9 +72,9 @@ const ProjectsSection: React.FC = () => {
 
                   <GlassCardContent className="flex-grow">
                     <div className="flex flex-wrap gap-2 mt-4">
-                      {project.tags.map((tag, index) => (
+                      {project.tags.map((tag) => (
                         <span
-                          key={index}
+                          key={tag}
                           className="px-3 py-1 text-xs rounded-full bg-dark-800 text-gray-300"
                         >
                           {tag}
@@ -130,28 +84,15 @@ const ProjectsSection: React.FC = () => {
                   </GlassCardContent>
 
                   <GlassCardFooter>
-                    <div className="flex space-x-4 pt-4">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-white transition-colors duration-300 flex items-center"
-                        >
-                          <FaGithub className="mr-2" /> Source
-                        </a>
-                      )}
-                      {project.demoUrl && (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-white transition-colors duration-300 flex items-center"
-                        >
-                          <FaExternalLinkAlt className="mr-2" /> Live Demo
-                        </a>
-                      )}
-                    </div>
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-white transition-colors duration-300 flex items-center pt-4"
+                      aria-label={`View source for ${project.title} on GitHub`}
+                    >
+                      <FaGithub className="mr-2" /> Source
+                    </a>
                   </GlassCardFooter>
                 </GlassCard>
               </TiltCard>

@@ -1,69 +1,103 @@
+"""Clean a user-supplied CSV without inventing or silently filling data."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+import tempfile
+from pathlib import Path
+
 import pandas as pd
-import numpy as np
-import os
 
-def clean_sales_data(input_file="messy_sales_data.csv", output_file="clean_sales_data.csv"):
-    """
-    A beginner-friendly script to clean a messy dataset using Pandas!
-    It handles missing values, fixes formatting, and removes duplicates.
-    """
-    print("🧹 Starting Data Cleaning Process...")
 
+def clean_sales_data(
+    input_file: Path,
+    output_file: Path,
+    drop_duplicates: bool = False,
+    drop_empty_rows: bool = False,
+) -> tuple[int, int, int]:
+    if not input_file.is_file():
+        raise ValueError(f"Input CSV does not exist: {input_file}")
+    if input_file.resolve() == output_file.resolve():
+        raise ValueError("The output path must not overwrite the input CSV.")
+
+    dataframe = pd.read_csv(input_file)
+    if dataframe.empty:
+        raise ValueError("The input CSV contains no data rows.")
+
+    columns = [str(column).strip() for column in dataframe.columns]
+    if any(not column for column in columns):
+        raise ValueError("Column names cannot be empty after trimming whitespace.")
+    if len(columns) != len(set(columns)):
+        raise ValueError("Column names must be unique after trimming whitespace.")
+    dataframe.columns = columns
+
+    for column in dataframe.select_dtypes(include=["object", "string"]).columns:
+        values = dataframe[column].astype("string").str.strip()
+        dataframe[column] = values.replace("", pd.NA)
+
+    original_rows = len(dataframe)
+    if drop_duplicates:
+        dataframe = dataframe.drop_duplicates()
+    if drop_empty_rows:
+        dataframe = dataframe.dropna(how="all")
+    removed_rows = original_rows - len(dataframe)
+    missing_cells = int(dataframe.isna().sum().sum())
+
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path: Path | None = None
     try:
-        # 1. Load the messy data
-        if not os.path.exists(input_file):
-            print(f"📝 {input_file} not found. Creating a sample messy dataset for you...")
-            # Creating a mock messy dataframe to demonstrate the cleaning process
-            df_mock = pd.DataFrame({
-                'Transaction_ID': ['T001', 'T002', 'T002', 'T004', 'T005'],
-                'Customer_Name': ['john doe', 'JANE SMITH ', 'JANE SMITH ', np.nan, 'Alice jones'],
-                'Sale_Amount': ['$150.00', '200', '200', 'error_value', '$350.50'],
-                'Date': ['2023-01-15', '2023-01-15', '2023-01-15', '2023-02-28', 'Mar-05-2023']
-            })
-            df_mock.to_csv(input_file, index=False)
-            print(f"✅ Sample data saved to {input_file}")
+        with tempfile.NamedTemporaryFile(
+            prefix=f".{output_file.stem}.",
+            suffix=output_file.suffix or ".csv",
+            dir=output_file.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+        dataframe.to_csv(temporary_path, index=False)
+        temporary_path.replace(output_file)
+    finally:
+        if temporary_path and temporary_path.exists():
+            temporary_path.unlink()
 
-        print(f"📂 Loading data from {input_file}...")
-        df = pd.read_csv(input_file)
-        
-        print("\n❌ Original Messy Data:")
-        print(df)
+    return original_rows, removed_rows, missing_cells
 
-        # 2. Remove Duplicates
-        initial_count = len(df)
-        df = df.drop_duplicates()
-        print(f"\n✅ Removed {initial_count - len(df)} duplicate rows.")
 
-        # 3. Handle Missing Values (Drop rows where Customer_Name is missing)
-        df = df.dropna(subset=['Customer_Name'])
-        print("✅ Handled missing values (dropped rows with null names).")
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Trim CSV headers and text values while preserving missing data."
+    )
+    parser.add_argument("--input", required=True, type=Path, help="Source CSV file.")
+    parser.add_argument("--output", required=True, type=Path, help="Cleaned CSV destination.")
+    parser.add_argument(
+        "--drop-duplicates",
+        action="store_true",
+        help="Remove fully duplicate rows after trimming text.",
+    )
+    parser.add_argument(
+        "--drop-empty-rows",
+        action="store_true",
+        help="Remove rows where every value is missing.",
+    )
+    return parser
 
-        # 4. Standardize Text (Make names Title Case and strip extra spaces)
-        df['Customer_Name'] = df['Customer_Name'].str.strip().str.title()
-        print("✅ Standardized customer names.")
 
-        # 5. Clean Numeric Data (Remove '$' and convert to float)
-        df['Sale_Amount'] = df['Sale_Amount'].astype(str).replace({'\$': ''}, regex=True)
-        df['Sale_Amount'] = pd.to_numeric(df['Sale_Amount'], errors='coerce')
-        
-        # Fill any new NaN values in Sale_Amount (from 'error_value') with the median
-        median_sale = df['Sale_Amount'].median()
-        df['Sale_Amount'] = df['Sale_Amount'].fillna(median_sale)
-        print("✅ Cleaned and converted Sales Amounts to numbers.")
+def main() -> int:
+    args = build_parser().parse_args()
+    try:
+        original, removed, missing = clean_sales_data(
+            args.input,
+            args.output,
+            drop_duplicates=args.drop_duplicates,
+            drop_empty_rows=args.drop_empty_rows,
+        )
+    except (OSError, ValueError, pd.errors.ParserError, pd.errors.EmptyDataError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    print(f"Read {original} rows; removed {removed}; retained {missing} missing cell(s).")
+    print(f"Wrote cleaned CSV to {args.output}")
+    return 0
 
-        # 6. Standardize Dates (Convert everything to YYYY-MM-DD format)
-        df['Date'] = pd.to_datetime(df['Date'], errors='coerce').dt.strftime('%Y-%m-%d')
-        print("✅ Standardized date formats.")
-
-        print("\n✨ Cleaned Data Preview:")
-        print(df.head())
-
-        # 7. Save the cleaned data to a new file
-        df.to_csv(output_file, index=False)
-        print(f"\n🎉 SUCCESS! Data successfully cleaned and saved to: {output_file}")
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    clean_sales_data()
+    raise SystemExit(main())
