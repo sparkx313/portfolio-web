@@ -1,62 +1,115 @@
-import requests
-import json
-from datetime import datetime
+"""Summarize real weather observations from a user-provided CSV."""
 
-def fetch_weather(city_name="London"):
-    """
-    A beginner project to pull live data from an Internet API!
-    It fetches the current weather for a city and displays it neatly.
-    """
-    print(f"🌤️  Fetching live weather data for {city_name}...\n")
-    
-    # We use a mock response here so the project runs without needing an API key,
-    # but the code structure demonstrates real API interaction!
-    
-    # Real code would look like: 
-    # API_KEY = "your_openweather_key"
-    # url = f"http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_KEY}&units=metric"
-    # response = requests.get(url)
-    # data = response.json()
-    
-    # Mocking the JSON response from an API:
-    mock_api_response = {
-        "weather": [{"main": "Clouds", "description": "scattered clouds"}],
-        "main": {
-            "temp": 15.5,
-            "feels_like": 14.2,
-            "humidity": 76
-        },
-        "wind": {"speed": 4.1},
-        "name": city_name
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.dates as mdates
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+REQUIRED_COLUMNS = {"date", "temperature_c", "precipitation_mm"}
+
+
+def build_weather_dashboard(input_file: Path, chart_file: Path, location: str) -> dict[str, float | int | str]:
+    if input_file.resolve() == chart_file.resolve():
+        raise ValueError("The chart path must not overwrite the input CSV.")
+    if not location.strip():
+        raise ValueError("Location label cannot be empty.")
+    if not input_file.is_file():
+        raise ValueError(f"Weather observations CSV does not exist: {input_file}")
+    data = pd.read_csv(input_file)
+    missing = REQUIRED_COLUMNS - set(data.columns)
+    if missing:
+        raise ValueError("CSV is missing required column(s): " + ", ".join(sorted(missing)))
+    if data.empty:
+        raise ValueError("Weather observations CSV contains no rows.")
+
+    dates = pd.to_datetime(data["date"], format="%Y-%m-%d", errors="coerce")
+    temperatures = pd.to_numeric(data["temperature_c"], errors="coerce")
+    precipitation = pd.to_numeric(data["precipitation_mm"], errors="coerce")
+    valid = (
+        dates.notna()
+        & temperatures.notna()
+        & precipitation.notna()
+        & np.isfinite(temperatures)
+        & np.isfinite(precipitation)
+    )
+    if not valid.all():
+        raise ValueError(
+            f"Found {int((~valid).sum())} row(s) with invalid dates or numeric weather values."
+        )
+    if (precipitation < 0).any():
+        raise ValueError("precipitation_mm cannot be negative.")
+
+    observed = pd.DataFrame(
+        {
+            "date": dates,
+            "temperature_c": temperatures,
+            "precipitation_mm": precipitation,
+        }
+    ).sort_values("date")
+    summary: dict[str, float | int | str] = {
+        "location": location,
+        "observations": int(len(observed)),
+        "start_date": observed["date"].min().strftime("%Y-%m-%d"),
+        "end_date": observed["date"].max().strftime("%Y-%m-%d"),
+        "mean_temperature_c": float(observed["temperature_c"].mean()),
+        "minimum_temperature_c": float(observed["temperature_c"].min()),
+        "maximum_temperature_c": float(observed["temperature_c"].max()),
+        "total_precipitation_mm": float(observed["precipitation_mm"].sum()),
     }
-    
-    data = mock_api_response
-    
+
+    chart_file.parent.mkdir(parents=True, exist_ok=True)
+    figure, (temperature_axis, rain_axis) = plt.subplots(
+        2, 1, figsize=(11, 7), sharex=True
+    )
+    temperature_axis.plot(
+        observed["date"], observed["temperature_c"], color="#d65a4a", marker="o"
+    )
+    temperature_axis.set_ylabel("Temperature (°C)")
+    temperature_axis.set_title(f"Weather observations — {location}")
+    temperature_axis.grid(alpha=0.2)
+    rain_axis.bar(observed["date"], observed["precipitation_mm"], color="#3977d5")
+    rain_axis.set_ylabel("Precipitation (mm)")
+    rain_axis.grid(axis="y", alpha=0.2)
+    date_locator = mdates.AutoDateLocator()
+    rain_axis.xaxis.set_major_locator(date_locator)
+    rain_axis.xaxis.set_major_formatter(mdates.ConciseDateFormatter(date_locator))
+    figure.tight_layout()
+    figure.savefig(chart_file, dpi=150)
+    plt.close(figure)
+    return summary
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Chart weather observations from a supplied CSV; no mock data is created."
+    )
+    parser.add_argument("--input", required=True, type=Path, help="Weather observations CSV.")
+    parser.add_argument("--chart", type=Path, default=Path("weather_dashboard.png"))
+    parser.add_argument("--location", required=True, help="Location label for the chart.")
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
     try:
-        # Extract the useful data from the JSON dictionary
-        temp = data['main']['temp']
-        feels_like = data['main']['feels_like']
-        humidity = data['main']['humidity']
-        desc = data['weather'][0]['description'].title()
-        wind_speed = data['wind']['speed']
-        
-        current_time = datetime.now().strftime("%I:%M %p")
-        
-        # Print a nice, formatted dashboard to the terminal
-        print("="*40)
-        print(f" 🌍 Weather Dashboard: {city_name.upper()}")
-        print(f" 🕒 Time: {current_time}")
-        print("="*40)
-        print(f" Condition:   {desc}")
-        print(f" Temperature: {temp}°C (Feels like {feels_like}°C)")
-        print(f" Humidity:    {humidity}%")
-        print(f" Wind Speed:  {wind_speed} m/s")
-        print("="*40)
-        
-    except Exception as e:
-         print(f"❌ Error parsing weather data: {e}")
+        summary = build_weather_dashboard(args.input, args.chart, args.location)
+    except (OSError, ValueError, pd.errors.ParserError, pd.errors.EmptyDataError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    for key, value in summary.items():
+        print(f"{key}: {value}")
+    print(f"Wrote chart to {args.chart}")
+    return 0
+
 
 if __name__ == "__main__":
-    cities = ["London", "Tokyo", "New York"]
-    for city in cities:
-        fetch_weather(city)
+    raise SystemExit(main())

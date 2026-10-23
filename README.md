@@ -1,51 +1,48 @@
-# 🚀 Modern Data Science Portfolio 
+# Muhammed Rabeeh — Portfolio
 
-A sleek, highly interactive, and modern portfolio website tailored for Data Science professionals. Built with performance and advanced UI/UX aesthetics in mind, this project demonstrates data analytics, machine learning, and predictive modeling expertise through a premium digital experience.
+A personal portfolio site with source links to three small, runnable tools that process files supplied by the user. No synthetic datasets or mocked service responses are included.
 
-![Portfolio Preview](./public/preview-image.png)
+## Website
 
-## ✨ Key Features & Aesthetics
+Built with React, TypeScript, Vite, Tailwind CSS, and Framer Motion.
 
-This portfolio doesn't just list projects; it provides an immersive user experience utilizing cutting-edge frontend technologies:
+```bash
+npm install
+npm run dev
+```
 
-*   **Interactive Particle Network:** A custom Canvas-based neural network background that reacts dynamically to user mouse movement, emphasizing the Data Science context.
-*   **Dynamic Bento Box Layout:** A clean, asymmetrical, and highly visual grid system used to organize the Technology Stack across logical workflows (Core Languages, ML, Data Wrangling, Environments).
-*   **3D Tilt Project Cards:** Immersive 3D hover physics applied to project showcases using Framer Motion.
-*   **Advanced Custom Cursor:** An SVG-based cursor featuring spring physics, color inversion (`mix-blend-mode: difference`), and responsive scaling to interactive elements.
-*   **Sleek Glassmorphism & UI:** Frosted glass effect cards with beautiful mixed dark gradients, glowing borders, and physics-based magnetic button CTA's.
-*   **Fluid Animations:** Smooth, scroll-triggered reveals and a modern fade-up text reel cycling through key data science disciplines.
+The development server prints its local URL. `npm run build` creates the static site in `dist/`.
 
-## 🛠️ Built With Highlights
+## Python data tools
 
-*   **React 18** & **Vite** (for blazing fast development)
-*   **Tailwind CSS** (for precise, highly-customized styling)
-*   **Framer Motion** (for complex spring physics and layout animations)
-*   **TypeScript** (for robust type safety)
+Install the utilities' dependencies from the repository root:
 
-## 👨‍💻 Author
+```bash
+python -m pip install -r src/projects/requirements.txt
+```
 
-**Muhammed Rabeeh**
-Data Science Student | Predictive Modeling | Advanced Analytics
+### CSV cleaner
 
-## 🚀 Running Locally
+```bash
+python src/projects/data_cleaning/dataset_cleaner.py --input path/to/raw.csv --output path/to/clean.csv --drop-duplicates --drop-empty-rows
+```
 
-To run this project on your local machine, follow these steps:
+It trims headers and text values, optionally removes duplicate or fully empty rows, and preserves missing values for review. It does not create data or guess how missing cells should be filled.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/sparkx313/portfolio-web.git
-   ```
-2. **Navigate into the directory:**
-   ```bash
-   cd portfolio-web
-   ```
-3. **Install the dependencies:**
-   ```bash
-   npm install
-   ```
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-5. **View the application:**
-   Open `http://localhost:5173/` in your browser.
+### Transaction category report
+
+```bash
+python src/projects/expense_tracker/expense_tracker.py --input path/to/transactions.csv --output path/to/category_totals.csv --chart path/to/category_totals.png --currency USD
+```
+
+The input CSV needs `date`, `category`, and `amount` columns. Dates must use `YYYY-MM-DD`; amounts can use digits, optional commas, and an optional `$` prefix. Use one currency or unit per file. Negative amounts reduce the category net total.
+
+### Weather observations dashboard
+
+```bash
+python src/projects/weather_dashboard/weather_dashboard.py --input path/to/observations.csv --chart path/to/weather.png --location "Location name"
+```
+
+The observations CSV needs `date`, `temperature_c`, and `precipitation_mm` columns. Dates use `YYYY-MM-DD`, temperatures are Celsius, and precipitation is millimeters. The script charts and summarizes the observations in the file; it does not fetch weather or generate readings.
+
+Each card links to the corresponding source folder. The site describes the current code and does not claim live APIs, machine-learning models, or analytics that are not implemented here.

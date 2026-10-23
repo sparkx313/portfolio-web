@@ -5,10 +5,9 @@ import ParticleNetwork from './ParticleNetwork';
 
 const HeroSection: React.FC = () => {
   const roles = [
-    "Data Science",
-    "Predictive Modeling",
-    "Advanced Analytics",
-    "Machine Learning"
+    "Data Tools",
+    "Data Visualization",
+    "Web Development"
   ];
 
   const [index, setIndex] = useState(0);
@@ -81,7 +80,7 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          I specialize in extracting meaningful insights from complex datasets, building predictive models, and creating data-driven solutions that drive business value through advanced analytics and machine learning techniques.
+          I build practical tools for cleaning CSV files, summarizing transaction data, and visualizing recorded weather observations. Explore each project for its source code and input format.
         </motion.p>
 
         <motion.div
